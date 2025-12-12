@@ -99,28 +99,8 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    // Fallback translations
-    const text = {
-        title: "Consultation",
-        duration: "Call Duration",
-        live: "Live",
-        connecting: "Connecting...",
-        ended: "Call Ended",
-        endCall: "End Call",
-        tabs: {
-            video: "Video Call",
-            chat: "Chat",
-            diagnosis: "Diagnosis",
-            prescription: "Prescription"
-        },
-        petInfo: "Pet Information",
-        symptoms: "Symptoms:",
-        history: "Medical History:",
-        allergies: "Allergies:",
-        medications: "Current Medications:",
-        takePhoto: "Take Photo",
-        viewImages: "View Images"
-    };
+    // Use translations from t.consultation
+    const text = t.consultation;
 
     const styles = {
         container: `min-h-screen bg-[#FFF0F0] ${language === 'ur' ? 'font-noto-nastaliq text-right' : ''}`,
@@ -134,9 +114,9 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
         return (
             <div className="min-h-screen bg-gray-900 flex items-center justify-center flex-col gap-4 text-white animate-in fade-in duration-300">
                 <PhoneOff size={64} className="text-red-500 mb-4" />
-                <h2 className="text-3xl font-bold">{text.ended}</h2>
+                <h2 className="text-3xl font-bold">{text.callEnded}</h2>
                 <p className="text-gray-400">{text.duration}: {formatTime(durationSeconds)}</p>
-                <p className="text-sm text-gray-500">Returning to dashboard...</p>
+                <p className="text-sm text-gray-500">{text.returningToDashboard}</p>
             </div>
         );
     }
@@ -156,8 +136,17 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold cursor-pointer">
-                        English <ChevronDown size={16} />
+                    <div className="relative group">
+                        <div className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold cursor-pointer">
+                            {t.languageName} <ChevronDown size={16} />
+                        </div>
+                        <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                            <button onClick={() => setLanguage('en')} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 font-medium rounded-t-lg">English</button>
+                            <button onClick={() => setLanguage('es')} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 font-medium">Español</button>
+                            <button onClick={() => setLanguage('fr')} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 font-medium">Français</button>
+                            <button onClick={() => setLanguage('de')} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 font-medium">Deutsch</button>
+                            <button onClick={() => setLanguage('ur')} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 font-medium rounded-b-lg">اردو</button>
+                        </div>
                     </div>
                     <img
                         src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
@@ -173,7 +162,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                     <div className="flex items-center gap-8">
                         <button onClick={onBack} className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-bold transition-colors">
                             <ArrowLeft size={16} />
-                            Back to Dashboard
+                            {text.backToDashboard}
                         </button>
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900">{text.title}</h2>
@@ -216,7 +205,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                         {callStatus === 'connecting' ? (
                                             <div className="text-white flex flex-col items-center gap-2">
                                                 <Loader2 size={32} className="animate-spin text-orange-500" />
-                                                <span className="text-sm font-medium">Connecting to Dr. Chen...</span>
+                                                <span className="text-sm font-medium">{text.connectingTo}</span>
                                             </div>
                                         ) : (
                                             <>
@@ -273,7 +262,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                             <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
                                 {/* Chat Header */}
                                 <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                                    <h3 className="font-bold text-gray-800">Chat with Dr. Chen</h3>
+                                    <h3 className="font-bold text-gray-800">{text.chatWith}</h3>
                                     <div className="flex gap-2">
                                         <button className="p-2 hover:bg-gray-200 rounded-full text-gray-600"><VideoIcon size={18} /></button>
                                         <button className="p-2 hover:bg-gray-200 rounded-full text-gray-600"><PhoneOff size={18} /></button>
@@ -303,7 +292,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                             type="text"
                                             value={newMessage}
                                             onChange={(e) => setNewMessage(e.target.value)}
-                                            placeholder="Type a message..."
+                                            placeholder={text.typeMessage}
                                             className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                                         />
                                         <button type="submit" className="bg-orange-500 text-white p-3 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20">
@@ -328,11 +317,11 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                 {(activeTab === 'report') ? (
                                     <div className="prose max-w-none">
                                         <p className="text-gray-600 mb-4 text-sm">
-                                            Detailed Analysis Report<br />
+                                            {text.detailedReport}<br />
                                             Our AI system has analyzed the uploaded image and detected signs consistent with <span className="font-bold text-gray-900">Fungal Infection</span> with a confidence level of 92%.
                                         </p>
 
-                                        <h3 className="font-bold text-gray-900 mb-2 text-sm">Clinical Findings:</h3>
+                                        <h3 className="font-bold text-gray-900 mb-2 text-sm">{text.clinicalFindings}</h3>
                                         <ul className="list-disc pl-5 space-y-1 text-gray-600 mb-4 text-sm">
                                             <li>Visible inflammation and redness in the affected area</li>
                                             <li>Skin texture changes consistent with dermatitis</li>
@@ -340,7 +329,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                             <li>Localized to specific region, suggesting environmental trigger</li>
                                         </ul>
 
-                                        <h3 className="font-bold text-gray-900 mb-2 text-sm">Recommended Next Steps:</h3>
+                                        <h3 className="font-bold text-gray-900 mb-2 text-sm">{text.recommendedSteps}</h3>
                                         <ol className="list-decimal pl-5 space-y-1 text-gray-600 mb-6 text-sm">
                                             <li>Apply prescribed topical treatment as directed</li>
                                             <li>Monitor for improvement over 7-10 days</li>
@@ -349,7 +338,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                         </ol>
 
                                         <div className="bg-orange-100 border border-orange-200 rounded-xl p-4 text-orange-800 text-sm">
-                                            <span className="font-bold">Important:</span> This AI analysis is for preliminary assessment only. Always consult with a qualified veterinarian.
+                                            <span className="font-bold">{text.important}</span> {text.aiDisclaimer}
                                         </div>
                                     </div>
                                 ) : (
@@ -357,23 +346,23 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                         {/* Confidence & Condition */}
                                         <div>
                                             <div className="flex justify-between items-end mb-2">
-                                                <label className="text-sm font-medium text-gray-600">Confidence Level</label>
+                                                <label className="text-sm font-medium text-gray-600">{text.confidenceLevel}</label>
                                                 <span className="text-orange-500 font-bold">92%</span>
                                             </div>
                                             <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
                                                 <div className="bg-orange-500 h-4 rounded-full" style={{ width: '92%' }}></div>
                                             </div>
 
-                                            <label className="text-sm font-medium text-gray-600 block mb-1">Detected Condition</label>
+                                            <label className="text-sm font-medium text-gray-600 block mb-1">{text.detectedCondition}</label>
                                             <div className="flex items-center gap-3">
                                                 <h3 className="text-3xl font-bold text-gray-900">Fungal Infection</h3>
-                                                <span className="bg-red-600 text-white px-3 py-1 rounded text-sm font-bold uppercase">High</span>
+                                                <span className="bg-red-600 text-white px-3 py-1 rounded text-sm font-bold uppercase">{text.high}</span>
                                             </div>
                                         </div>
 
                                         {/* Recommended Treatment */}
                                         <div>
-                                            <h4 className="font-bold text-gray-800 mb-3">Recommended Treatment</h4>
+                                            <h4 className="font-bold text-gray-800 mb-3">{text.recommendedTreatment}</h4>
                                             <div className="bg-cyan-100 p-4 rounded-xl text-gray-800 font-medium flex gap-3">
                                                 <div className="bg-white/50 w-6 h-6 rounded-full flex items-center justify-center shrink-0">
                                                     <span className="text-xs font-bold text-cyan-700">Rx</span>
@@ -384,21 +373,21 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
 
                                         {/* Follow-up */}
                                         <div>
-                                            <h4 className="font-bold text-gray-800 mb-3">Follow-up Recommendations</h4>
+                                            <h4 className="font-bold text-gray-800 mb-3">{text.followUpRecommendations}</h4>
                                             <div className="space-y-3">
                                                 <div className="bg-green-100 p-3 rounded-lg flex items-center gap-3 text-green-900 font-medium">
                                                     <div className="w-5 h-5 rounded-full border-2 border-green-500 flex items-center justify-center">
                                                         <span className="text-green-600 text-xs">✓</span>
                                                     </div>
-                                                    Apply Treatment
+                                                    {text.applyTreatment}
                                                 </div>
                                                 <div className="bg-orange-100 p-3 rounded-lg flex items-center gap-3 text-orange-900 font-medium">
                                                     <div className="w-5 h-5 rounded-full border-2 border-orange-400 flex items-center justify-center text-orange-500 text-xs">!</div>
-                                                    Monitor Symptoms
+                                                    {text.monitorSymptoms}
                                                 </div>
                                                 <div className="bg-rose-100 p-3 rounded-lg flex items-center gap-3 text-rose-900 font-medium">
                                                     <div className="w-5 h-5 rounded-full border-2 border-rose-400 flex items-center justify-center text-rose-500 text-xs">!</div>
-                                                    Veterinary Consultation
+                                                    {text.vetConsultation}
                                                 </div>
                                             </div>
                                         </div>
@@ -409,22 +398,22 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
 
                         {(activeTab === 'report') && (
                             <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-y-auto p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">AI Analysis Results</h3>
-                                <p className="text-gray-500 mb-6">Analysis Date: 1/25/2024</p>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">{text.aiAnalysis}</h3>
+                                <p className="text-gray-500 mb-6">{text.analysisDate}: 1/25/2024</p>
 
                                 <div className="bg-gray-200 p-1 rounded-lg flex mb-8">
-                                    <button onClick={() => setActiveTab('diagnosis')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'diagnosis' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Preview</button>
-                                    <button onClick={() => setActiveTab('report')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Full Report</button>
-                                    <button onClick={() => setActiveTab('prescription')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'prescription' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Prescription</button>
+                                    <button onClick={() => setActiveTab('diagnosis')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'diagnosis' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>{text.preview}</button>
+                                    <button onClick={() => setActiveTab('report')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'report' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>{text.fullReport}</button>
+                                    <button onClick={() => setActiveTab('prescription')} className={`flex-1 py-1.5 text-center font-bold text-sm rounded-md transition-all ${activeTab === 'prescription' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>{text.tabs.prescription}</button>
                                 </div>
 
                                 <div className="prose max-w-none">
                                     <p className="text-gray-600 mb-4 text-sm">
-                                        Detailed Analysis Report<br />
+                                        {text.detailedReport}<br />
                                         Our AI system has analyzed the uploaded image and detected signs consistent with <span className="font-bold text-gray-900">Fungal Infection</span> with a confidence level of 92%.
                                     </p>
 
-                                    <h3 className="font-bold text-gray-900 mb-2 text-sm">Clinical Findings:</h3>
+                                    <h3 className="font-bold text-gray-900 mb-2 text-sm">{text.clinicalFindings}</h3>
                                     <ul className="list-disc pl-5 space-y-1 text-gray-600 mb-4 text-sm">
                                         <li>Visible inflammation and redness in the affected area</li>
                                         <li>Skin texture changes consistent with dermatitis</li>
@@ -432,7 +421,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                         <li>Localized to specific region, suggesting environmental trigger</li>
                                     </ul>
 
-                                    <h3 className="font-bold text-gray-900 mb-2 text-sm">Recommended Next Steps:</h3>
+                                    <h3 className="font-bold text-gray-900 mb-2 text-sm">{text.recommendedSteps}</h3>
                                     <ol className="list-decimal pl-5 space-y-1 text-gray-600 mb-6 text-sm">
                                         <li>Apply prescribed topical treatment as directed</li>
                                         <li>Monitor for improvement over 7-10 days</li>
@@ -441,7 +430,7 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                                     </ol>
 
                                     <div className="bg-orange-100 border border-orange-200 rounded-xl p-4 text-orange-800 text-sm">
-                                        <span className="font-bold">Important:</span> This AI analysis is for preliminary assessment only. Always consult with a qualified veterinarian.
+                                        <span className="font-bold">{text.important}</span> {text.aiDisclaimer}
                                     </div>
                                 </div>
                             </div>
@@ -465,11 +454,11 @@ const Consultation = ({ onBack, language = 'en', setLanguage, pet }) => {
                         {/* Stats Row */}
                         <div className="flex justify-between mb-8 text-gray-800 font-medium">
                             <div className="space-y-1">
-                                <p className="text-gray-500">Age:</p>
+                                <p className="text-gray-500">{text.age}</p>
                                 <p className="text-xl font-bold">{pet?.age || "N/A"}</p>
                             </div>
                             <div className="space-y-1 text-right">
-                                <p className="text-gray-500">Weight:</p>
+                                <p className="text-gray-500">{text.weight}</p>
                                 <p className="text-xl font-bold">{pet?.weight || "N/A"}</p>
                             </div>
                         </div>

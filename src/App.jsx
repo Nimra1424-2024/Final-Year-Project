@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Features from './components/Features';
+import AboutUs from './components/AboutUs';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 
@@ -8,6 +10,7 @@ import AIDiagnosis from './components/AIDiagnosis';
 import Veterinarians from './components/Veterinarians';
 import Consultation from './components/Consultation';
 import MedicalHistory from './components/MedicalHistory';
+import Profile from './components/Profile';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -39,6 +42,7 @@ function App() {
   ]);
 
   const [selectedPetId, setSelectedPetId] = useState(1);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const handleAddPet = (petData) => {
     const newPet = {
@@ -97,6 +101,24 @@ function App() {
     setCurrentPage('landing');
   };
 
+  const handleJoinCall = (appointment) => {
+    if (appointment.status === 'confirmed') {
+      setSelectedAppointment(appointment);
+      setCurrentPage('consultation');
+    }
+  };
+
+  const handleCancelAppointment = (index) => {
+    const updatedAppointments = appointments.filter((_, i) => i !== index);
+    setAppointments(updatedAppointments);
+  };
+
+  const handleAcceptAppointment = (index) => {
+    const updatedAppointments = [...appointments];
+    updatedAppointments[index].status = 'confirmed';
+    setAppointments(updatedAppointments);
+  };
+
   if (currentPage === 'dashboard' && isLoggedIn) {
     return (
       <Dashboard
@@ -108,6 +130,9 @@ function App() {
         appointments={appointments}
         myPets={myPets}
         onAddPet={handleAddPet}
+        onJoinCall={handleJoinCall}
+        onCancelAppointment={handleCancelAppointment}
+        onAcceptAppointment={handleAcceptAppointment}
       />
     );
   }
@@ -131,14 +156,18 @@ function App() {
     );
   }
 
-  if (currentPage === 'consultation' && isLoggedIn) {
+  if (currentPage === 'consultation' && isLoggedIn && selectedAppointment) {
     const activePet = myPets.find(p => p.id === selectedPetId) || myPets[0];
     return (
       <Consultation
-        onBack={() => setCurrentPage('dashboard')}
+        onBack={() => {
+          setCurrentPage('dashboard');
+          setSelectedAppointment(null);
+        }}
         language={language}
         setLanguage={setLanguage}
         pet={activePet}
+        appointment={selectedAppointment}
       />
     );
   }
@@ -148,6 +177,17 @@ function App() {
       <MedicalHistory
         onBack={() => setCurrentPage('dashboard')}
         language={language}
+      />
+    );
+  }
+
+  if (currentPage === 'profile' && isLoggedIn) {
+    return (
+      <Profile
+        onBack={() => setCurrentPage('dashboard')}
+        language={language}
+        setLanguage={setLanguage}
+        userName={userRole === 'vet' ? 'Dr. Smith' : 'Pet Owner'}
       />
     );
   }
@@ -168,6 +208,8 @@ function App() {
         onStart={navigateToLogin}
         language={language}
       />
+      <Features language={language} />
+      <AboutUs language={language} />
     </div>
   );
 }

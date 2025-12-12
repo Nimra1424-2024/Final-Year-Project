@@ -8,7 +8,9 @@ import {
     CheckCircle,
     RefreshCw,
     Download,
-    Share2
+    Share2,
+    User,
+    Stethoscope
 } from 'lucide-react';
 import { translations } from '../utils/translations';
 
@@ -19,6 +21,14 @@ const AIDiagnosis = ({ onBack, language = 'en' }) => {
     const [selectedPet, setSelectedPet] = useState('Buddy');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [showResults, setShowResults] = useState(false);
+
+    // Pet Information
+    const [petAge, setPetAge] = useState('');
+    const [petGender, setPetGender] = useState('');
+    const [petBreed, setPetBreed] = useState('');
+
+    // Symptoms
+    const [symptoms, setSymptoms] = useState('');
 
     // Fallback translations
     const text = {
@@ -260,6 +270,68 @@ const AIDiagnosis = ({ onBack, language = 'en' }) => {
                     </div>
 
                     <div className="lg:col-span-2 space-y-6">
+                        {/* Pet Information Section */}
+                        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <User size={20} className="text-blue-600" />
+                                Pet Information
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Pet Age</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="e.g., 3 years"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                        value={petAge}
+                                        onChange={(e) => setPetAge(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Pet Gender</label>
+                                    <select
+                                        required
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                        value={petGender}
+                                        onChange={(e) => setPetGender(e.target.value)}
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Pet Breed</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="e.g., Golden Retriever"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                        value={petBreed}
+                                        onChange={(e) => setPetBreed(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Symptoms Section */}
+                        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <Stethoscope size={20} className="text-yellow-600" />
+                                Symptoms Description
+                            </h2>
+                            <textarea
+                                required
+                                rows="4"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all resize-none"
+                                placeholder="Please describe your pet's symptoms in detail (e.g., skin rash, itching, redness, hair loss, etc.)"
+                                value={symptoms}
+                                onChange={(e) => setSymptoms(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Upload Photo Section */}
                         <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
                             <h2 className="text-lg font-bold text-gray-900 mb-6">Upload Photo</h2>
                             <div className={`rounded-2xl border-2 border-dashed transition-all p-12 text-center ${dragActive ? 'border-orange-500 bg-orange-50' : 'border-gray-200'} ${selectedFile ? 'border-green-500 bg-green-50' : ''}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
@@ -288,8 +360,8 @@ const AIDiagnosis = ({ onBack, language = 'en' }) => {
                         <div className="flex justify-end">
                             <button
                                 onClick={handleAnalyze}
-                                disabled={!selectedFile || isAnalyzing}
-                                className="bg-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition-all flex items-center gap-2 disabled:opacity-50"
+                                disabled={!selectedFile || isAnalyzing || !petAge || !petGender || !petBreed || !symptoms}
+                                className="bg-orange-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-orange-600 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isAnalyzing ? 'Analyzing...' : <> <Camera size={24} /> Analyze with AI </>}
                             </button>

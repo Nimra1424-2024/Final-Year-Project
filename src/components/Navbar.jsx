@@ -34,8 +34,24 @@ const Navbar = ({ onGetStarted, onHome, language = 'en', setLanguage }) => {
                     </div>
 
                     <div className="hidden md:flex items-center space-x-8">
-                        <a href="#features" className="text-gray-900 hover:text-orange-500 font-medium transition-colors">{t.features}</a>
-                        <a href="#about" className="text-gray-900 hover:text-orange-500 font-medium transition-colors">{t.about}</a>
+                        <button
+                            onClick={() => {
+                                const featuresSection = document.getElementById('features');
+                                featuresSection?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="text-gray-900 hover:text-orange-500 font-medium transition-colors cursor-pointer"
+                        >
+                            {t.features}
+                        </button>
+                        <button
+                            onClick={() => {
+                                const aboutSection = document.getElementById('about');
+                                aboutSection?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="text-gray-900 hover:text-orange-500 font-medium transition-colors cursor-pointer"
+                        >
+                            {t.about}
+                        </button>
 
                         {/* Language Selector */}
                         <div className="relative">
@@ -86,8 +102,26 @@ const Navbar = ({ onGetStarted, onHome, language = 'en', setLanguage }) => {
             {isOpen && (
                 <div className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-4 shadow-lg">
                     <div className="flex flex-col space-y-4">
-                        <a href="#features" className="text-gray-600 font-medium py-2">{t.features}</a>
-                        <a href="#about" className="text-gray-600 font-medium py-2">{t.about}</a>
+                        <button
+                            onClick={() => {
+                                const featuresSection = document.getElementById('features');
+                                featuresSection?.scrollIntoView({ behavior: 'smooth' });
+                                setIsOpen(false);
+                            }}
+                            className="text-gray-600 font-medium py-2 text-left"
+                        >
+                            {t.features}
+                        </button>
+                        <button
+                            onClick={() => {
+                                const aboutSection = document.getElementById('about');
+                                aboutSection?.scrollIntoView({ behavior: 'smooth' });
+                                setIsOpen(false);
+                            }}
+                            className="text-gray-600 font-medium py-2 text-left"
+                        >
+                            {t.about}
+                        </button>
 
                         {/* Mobile Language Selector */}
                         <div className="py-2">

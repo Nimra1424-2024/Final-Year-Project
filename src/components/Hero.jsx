@@ -37,15 +37,15 @@ const Hero = ({ onStart, language = 'en' }) => {
 
                         <div className="mt-16 flex flex-row items-center justify-between lg:justify-start lg:gap-24 gap-8 w-full lg:w-auto px-4 lg:px-0">
                             <div className="flex flex-col items-center lg:items-start">
-                                <span className="text-3xl font-bold text-orange-500">50K+</span>
+                                <span className="text-3xl font-bold text-orange-500">10K+</span>
                                 <span className="text-sm font-medium text-gray-500 mt-1">{t.happyPets}</span>
                             </div>
                             <div className="flex flex-col items-center lg:items-start">
-                                <span className="text-3xl font-bold text-orange-500">1200+</span>
+                                <span className="text-3xl font-bold text-orange-500">500+</span>
                                 <span className="text-sm font-medium text-gray-500 mt-1">{t.connectedVets}</span>
                             </div>
                             <div className="flex flex-col items-center lg:items-start">
-                                <span className="text-3xl font-bold text-orange-500">98%</span>
+                                <span className="text-3xl font-bold text-orange-500">95%</span>
                                 <span className="text-sm font-medium text-gray-500 mt-1">{t.accuracyRate}</span>
                             </div>
                         </div>
